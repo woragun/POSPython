@@ -18,8 +18,22 @@ class FMS:
         self.home_img = self.home_img.resize((200,200))
         self.home_img = ImageTk.PhotoImage((self.home_img))
         
+        self.storage_img = Image.open('img\storage.png')
+        self.storage_img = self.storage_img.resize((200,200))
+        self.storage_img = ImageTk.PhotoImage((self.storage_img))
+
+        self.account_img = Image.open('img\profit.png')
+        self.account_img = self.account_img.resize((200,200))
+        self.account_img = ImageTk.PhotoImage((self.account_img))
+        
+        self.history_img = Image.open('img\history.png')
+        self.history_img = self.history_img.resize((200,200))
+        self.history_img = ImageTk.PhotoImage((self.history_img))
+
         btn_home = Button(Menu,image =self.home_img,bg = '#517d30',highlightthickness = 0, bd = 0).pack(side=TOP)
-        btn_storage = Button()
+        btn_storage = Button(Menu,image=self.storage_img,bg = '#517d30',highlightthickness=0,bd=0).pack(side=TOP)
+        btn_account = Button(Menu,image =self.account_img,bg = '#517d30',highlightthickness = 0, bd = 0).pack(side=TOP)
+        btn_history = Button(Menu,image=self.history_img,bg = '#517d30',highlightthickness=0,bd=0).pack(side=TOP)
 
 
 root = Tk()
