@@ -1,6 +1,7 @@
 from tkinter import *
 from PIL import Image,ImageTk
 from worker import Employee
+from tkinter import ttk
 class FMS:
     def __init__(self,root):
         self.root = root
