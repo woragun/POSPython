@@ -31,9 +31,16 @@ class FMS:
         self.history_img = ImageTk.PhotoImage((self.history_img))
 
         btn_home = Button(Menu,image =self.home_img,bg = '#517d30',highlightthickness = 0, bd = 0).pack(side=TOP)
-        btn_storage = Button(Menu,image=self.storage_img,bg = '#517d30',highlightthickness=0,bd=0).pack(side=TOP)
-        btn_account = Button(Menu,image =self.account_img,bg = '#517d30',highlightthickness = 0, bd = 0).pack(side=TOP)
+        btn_storage = Button(Menu,image=self.storage_img,bg = '#517d30',highlightthickness=0,bd=0).pack(side=TOP,pady=20)
+        btn_account = Button(Menu,image =self.account_img,bg = '#517d30',highlightthickness = 0, bd = 0).pack(side=TOP,pady=20)
         btn_history = Button(Menu,image=self.history_img,bg = '#517d30',highlightthickness=0,bd=0).pack(side=TOP)
+
+        self.lbl_dailysell = Label(self.root,text =  'Today sell\n [0]',font=('futura','40','bold'),bg='#33bbf9',fg='white')
+        self.lbl_dailysell.place(x = 404,y = 140,height = 320, width= 400)
+        self.lbl_dailysell = Label(self.root,text =  'This month sell\n [0]',font=('futura','35','bold'),bg='#33bbf9',fg='white')
+        self.lbl_dailysell.place(x = 404,y = 480,height = 320, width= 400)
+
+        
 
 
 root = Tk()
