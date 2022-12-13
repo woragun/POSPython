@@ -18,6 +18,8 @@ class Stock:
         self.var_item_price = StringVar()
         self.var_item_date = StringVar()
 
+        self.var_sell_quantity = StringVar()
+
         searchFrame = LabelFrame(self.root,text='Search Item',font=('futura',12,'bold'),bd = 1,bg = 'white')
         searchFrame.place(x= 400,y=20,width=800, height=80)
         txt_search = Entry(searchFrame,textvariable=self.var_searchtext,font=('futura',14)).place(x=200,y = 10,width=200)
@@ -38,11 +40,14 @@ class Stock:
 
         lbl_date = Label(self.root,text = 'Date', font =('Futura',14), bg = 'white').place(x=400,y=380)
         txt_quantity = Entry(self.root,textvariable=self.var_item_date, font =('Futura',14), bg = 'white').place(x=500,y=380)
+        lbl_sell = Label(self.root,text = 'Sell', font =('Futura',14), bg = 'white').place(x=850,y=380)
+        txt_sell = Entry(self.root,textvariable=self.var_sell_quantity, font =('Futura',14), bg = 'white').place(x=950,y=380)
 
         btn_save = Button(self.root,text='Add',command=self.add,font=('futura',14,'bold'),bg = '#4caf50',fg = 'white',cursor='hand2').place(x = 400, y= 500,width = 120,height=30)
         btn_update = Button(self.root,text='Update',command=self.update,font=('futura',14,'bold'),bg = '#4caf50',fg = 'white',cursor='hand2').place(x = 540, y= 500,width = 120,height=30)
         btn_delete = Button(self.root,text='Delete',command=self.delete,font=('futura',14,'bold'),bg = '#4caf50',fg = 'white',cursor='hand2').place(x = 680, y= 500,width = 120,height=30)
-        btn_clear = Button(self.root,text='Clear',command='Clear',font=('futura',14,'bold'),bg = '#4caf50',fg = 'white',cursor='hand2').place(x = 820, y= 500,width = 120,height=30)
+        btn_clear = Button(self.root,text='Clear',command= self.clear,font=('futura',14,'bold'),bg = '#4caf50',fg = 'white',cursor='hand2').place(x = 820, y= 500,width = 120,height=30)
+        btn_update = Button(self.root,text='Sell',command=self.sell,font=('futura',14,'bold'),bg = '#4caf50',fg = 'white',cursor='hand2').place(x = 960, y= 500,width = 120,height=30)
 
         stc_frame = Frame(self.root,bd = 3,relief=RIDGE)
         stc_frame.place(x=0,y = 600,relwidth=1,height=360)
@@ -186,6 +191,32 @@ class Stock:
         except Exception as ex:
             messagebox.showerror('Error',f"Error due to : {str(ex)}",parent = self.root)
 
+    def sell(self):
+        con = sqlite3.connect(database = r'FMS.db')
+        cur = con.cursor()
+        try:
+            if self.var_item_id.get() == '' :
+                messagebox.showerror('Error',"Id is required",parent = self.root)
+            else:
+                cur.execute('Select * from stock where id=?',(self.var_item_id.get(),))
+                row = cur.fetchone()
+                if row == None:
+                    messagebox.showerror('Error',"Doesn't exist",parent = self.root)
+                else:
+                    a = self.var_item_quantity.get()
+                    b = self.var_sell_quantity.get()
+                    c = int(a) - int(b)
+                    self.var_item_quantity.set(str(c))
+                    cur.execute('Update stock set quantity=? where id=?',(
+                                    self.var_item_quantity.get(),
+                                    self.var_item_id.get()
+                    ))
+                    con.commit()
+                    messagebox.showinfo('Success','Stock is updated',parent = self.root)
+                    self.show()
+                    con.close()
+        except Exception as ex:
+            messagebox.showerror('Error',f"Error due to : {str(ex)}",parent = self.root)
         
 
 
