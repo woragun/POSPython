@@ -12,7 +12,6 @@ class Employee:
 
         self.var_searchtype = StringVar()
         self.var_searchtext = StringVar()
-        self.var_searchgender = StringVar()
 
         self.var_wrk_id = StringVar()
         self.var_wrk_name = StringVar()
@@ -29,7 +28,7 @@ class Employee:
         cmb_search.current(0)
 
         txt_search = Entry(searchFrame,textvariable=self.var_searchtext,font=('futura',14)).place(x=200,y = 10,width=200)
-        btn_serch = Button(searchFrame,font=('futura',14,'bold'),bg = '#4caf50',fg = 'white',cursor='hand2').place(x = 440,y = 10,width = 150,height=30)
+        btn_serch = Button(searchFrame,command=self.search,font=('futura',14,'bold'),bg = '#4caf50',fg = 'white',cursor='hand2').place(x = 440,y = 10,width = 150,height=30)
 
         title = Label(self.root,text='Worker Details',font = ('Futura',16,'bold'),bg = '#0f4d7d',fg='white',justify=CENTER).place(x =300,y=120,width = 1000)
 
@@ -38,7 +37,7 @@ class Employee:
         lbl_contact = Label(self.root,text = 'Contact', font =('Futura',14), bg = 'white').place(x=1050,y=180)
 
         txt_wrk_id = Entry(self.root,textvariable= self.var_wrk_id, font =('Futura',14), bg = 'white').place(x=350,y=180,width=180)
-        cmb_gender = ttk.Combobox(self.root,textvariable=self.var_searchgender,values=('Select','Male','Female'),state='readonly',justify=CENTER,font=('futura',14))
+        cmb_gender = ttk.Combobox(self.root,textvariable=self.var_wrk_gender,values=('Select','Male','Female'),state='readonly',justify=CENTER,font=('futura',14))
         cmb_gender.place(x=800,y=180,width=180)
         cmb_gender.current(0)
         txt_contact = Entry(self.root,textvariable = self.var_wrk_contact, font =('Futura',14), bg = 'white').place(x=1200,y=180,width=180)
@@ -54,7 +53,7 @@ class Employee:
         btn_save = Button(self.root,text='Save',command=self.add,font=('futura',14,'bold'),bg = '#4caf50',fg = 'white',cursor='hand2').place(x = 400, y= 400,width = 120,height=30)
         btn_update = Button(self.root,text='Update',command=self.update,font=('futura',14,'bold'),bg = '#4caf50',fg = 'white',cursor='hand2').place(x = 540, y= 400,width = 120,height=30)
         btn_delete = Button(self.root,text='Delete',command=self.delete,font=('futura',14,'bold'),bg = '#4caf50',fg = 'white',cursor='hand2').place(x = 680, y= 400,width = 120,height=30)
-        btn_clear = Button(self.root,text='Clear',font=('futura',14,'bold'),bg = '#4caf50',fg = 'white',cursor='hand2').place(x = 820, y= 400,width = 120,height=30)
+        btn_clear = Button(self.root,text='Clear',command= self.clear,font=('futura',14,'bold'),bg = '#4caf50',fg = 'white',cursor='hand2').place(x = 820, y= 400,width = 120,height=30)
         
         emp_frame = Frame(self.root,bd = 3,relief=RIDGE)
         emp_frame.place(x=0,y = 600,relwidth=1,height=360)
@@ -184,7 +183,29 @@ class Employee:
         self.var_wrk_contact.set(""),
         self.var_wrk_nationality.set(""),
         self.var_wrk_wage.set("")
+        self.var_searchtext.set('')
         self.show()
+    
+    def search(self):
+        con = sqlite3.connect(database = r'FMS.db')
+        cur = con.cursor()
+        try:
+            if self.var_searchtype.get() =='Select' :
+                messagebox.showerror('Error','Invalid Type',parent = self.root)
+                cur.execute('select * from worker')
+            elif self.var_searchtext.get() =='':
+                messagebox.showerror('Error','Empty Text',parent = self.root)
+            else:
+                cur.execute("select * from worker where "+self.var_searchtype.get()+" LIKE '%"+self.var_searchtext.get()+"%'")
+                rows = cur.fetchall()
+                if len(rows) !=0:
+                    self.table.delete(*self.table.get_children())
+                    for r in rows:
+                        self.table.insert('', END,values = r)
+                else:
+                    messagebox.showerror('Error','Not Found',parent = self.root)
+        except Exception as ex:
+            messagebox.showerror('Error',f"Error due to : {str(ex)}",parent = self.root)
 
 
 if __name__ == '__main__':

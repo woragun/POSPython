@@ -2,6 +2,7 @@ from tkinter import *
 from PIL import Image,ImageTk
 from worker import Employee
 from tkinter import ttk
+from stock import Stock
 class FMS:
     def __init__(self,root):
         self.root = root
@@ -50,6 +51,9 @@ class FMS:
     def worker(self):
         self.new_win = Toplevel(self.root)
         self.new_obj = Employee(self.new_win)
+    def stock(self):
+        self.new_win = Toplevel(self.root)
+        self.new_obj = Stock(self.new_win)
 
         
 if __name__ == '__main__':
