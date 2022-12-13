@@ -39,7 +39,7 @@ class FMS:
 
         btn_home = Button(Menu,image =self.home_img,bg = '#517d30',highlightthickness = 0, bd = 0).pack(side=TOP)
         btn_worker = Button(Menu,image=self.worker_img,command=self.worker,bg = '#517d30',highlightthickness=0,bd=0).pack(side=TOP,pady=20)
-        btn_storage = Button(Menu,image=self.storage_img,bg = '#517d30',highlightthickness=0,bd=0).pack(side=TOP,pady=20)
+        btn_storage = Button(Menu,image=self.storage_img,command=self.stock,bg = '#517d30',highlightthickness=0,bd=0).pack(side=TOP,pady=20)
         btn_account = Button(Menu,image =self.account_img,bg = '#517d30',highlightthickness = 0, bd = 0).pack(side=TOP,pady=20)
         btn_history = Button(Menu,image=self.history_img,bg = '#517d30',highlightthickness=0,bd=0).pack(side=TOP)
 

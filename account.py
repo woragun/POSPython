@@ -2,7 +2,8 @@ from tkinter import *
 from PIL import Image,ImageTk
 from tkinter import ttk,messagebox
 import sqlite3
-class Stock:
+from stock import Stock
+class Account:
     def __init__(self,root):
         self.root = root
         self.root.geometry('1600x960+320+120')

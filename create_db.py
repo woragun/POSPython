@@ -5,9 +5,6 @@ def createDatabase():
     cur.execute("CREATE TABLE IF NOT EXISTS worker(id INTEGER PRIMARY KEY AUTOINCREMENT,name text,gender text,contact text,nationality text,wage text)")
     con.commit()
 
-    cur.execute("CREATE TABLE IF NOT EXISTS stock(id INTEGER PRIMARY KEY AUTOINCREMENT,name text,quantity INTEGER,price float)")
-    con.commit()
-
-    cur.execute("CREATE TABLE IF NOT EXISTS product(id INTEGER PRIMARY KEY AUTOINCREMENT,name text,quantity INTEGER,date text)")
+    cur.execute("CREATE TABLE IF NOT EXISTS stock(id INTEGER PRIMARY KEY AUTOINCREMENT,name text,quantity INTEGER,price float,date text)")
     con.commit()
 createDatabase()
