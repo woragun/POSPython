@@ -19,11 +19,14 @@ class Stock:
         self.var_item_date = StringVar()
 
         self.var_sell_quantity = StringVar()
+        self.srch_picture = Image.open('img\search.png')
+        self.srch_picture = self.srch_picture.resize((20,20))
+        self.srch_picture = ImageTk.PhotoImage((self.srch_picture))
 
         searchFrame = LabelFrame(self.root,text='Search Item',font=('futura',12,'bold'),bd = 1,bg = 'white')
         searchFrame.place(x= 400,y=20,width=800, height=80)
         txt_search = Entry(searchFrame,textvariable=self.var_searchtext,font=('futura',14)).place(x=200,y = 10,width=200)
-        btn_serch = Button(searchFrame,font=('futura',14,'bold'),bg = '#4caf50',fg = 'white',cursor='hand2').place(x = 440,y = 10,width = 150,height=30)
+        btn_serch = Button(searchFrame,image = self.srch_picture,bg = '#4caf50',fg = 'white',cursor='hand2').place(x = 440,y = 10,width = 150,height=30)
 
         title = Label(self.root,text='Stock Details',font = ('Futura',16,'bold'),bg = '#0f4d7d',fg='white',justify=CENTER).place(x =300,y=120,width = 1000)
         lbl_id = Label(self.root,text = 'Id', font =('Futura',14), bg = 'white').place(x=400,y=180)
@@ -44,10 +47,10 @@ class Stock:
         txt_sell = Entry(self.root,textvariable=self.var_sell_quantity, font =('Futura',14), bg = 'white').place(x=950,y=380)
 
         btn_save = Button(self.root,text='Add',command=self.add,font=('futura',14,'bold'),bg = '#4caf50',fg = 'white',cursor='hand2').place(x = 400, y= 500,width = 120,height=30)
-        btn_update = Button(self.root,text='Update',command=self.update,font=('futura',14,'bold'),bg = '#4caf50',fg = 'white',cursor='hand2').place(x = 540, y= 500,width = 120,height=30)
-        btn_delete = Button(self.root,text='Delete',command=self.delete,font=('futura',14,'bold'),bg = '#4caf50',fg = 'white',cursor='hand2').place(x = 680, y= 500,width = 120,height=30)
-        btn_clear = Button(self.root,text='Clear',command= self.clear,font=('futura',14,'bold'),bg = '#4caf50',fg = 'white',cursor='hand2').place(x = 820, y= 500,width = 120,height=30)
-        btn_update = Button(self.root,text='Sell',command=self.sell,font=('futura',14,'bold'),bg = '#4caf50',fg = 'white',cursor='hand2').place(x = 960, y= 500,width = 120,height=30)
+        btn_update = Button(self.root,text='Update',command=self.update,font=('futura',14,'bold'),bg = '#0d6efd',fg = 'white',cursor='hand2').place(x = 540, y= 500,width = 120,height=30)
+        btn_delete = Button(self.root,text='Delete',command=self.delete,font=('futura',14,'bold'),bg = '#dc3545',fg = 'white',cursor='hand2').place(x = 680, y= 500,width = 120,height=30)
+        btn_clear = Button(self.root,text='Clear',command= self.clear,font=('futura',14,'bold'),bg = '#20c997',fg = 'white',cursor='hand2').place(x = 820, y= 500,width = 120,height=30)
+        btn_sell = Button(self.root,text='Sell',command=self.sell,font=('futura',14,'bold'),bg = '#ffc107',fg = 'white',cursor='hand2').place(x = 960, y= 500,width = 120,height=30)
 
         stc_frame = Frame(self.root,bd = 3,relief=RIDGE)
         stc_frame.place(x=0,y = 600,relwidth=1,height=360)
@@ -82,20 +85,24 @@ class Stock:
                 messagebox.showerror('Error',"Id is required",parent = self.root)
             else:
                 cur.execute('Select * from stock where id=?',(self.var_item_id.get(),))
-                row = cur.fetchone()
-                if row != None:
-                    messagebox.showerror('Error',"Already Exits",parent = self.root)
+                q = self.var_item_quantity.get()
+                if int(q) > 0:
+                    row = cur.fetchone()
+                    if row != None:
+                        messagebox.showerror('Error',"Already Exits",parent = self.root)
+                    else:
+                        cur.execute('Insert into stock (id,name,quantity,price,date) values(?,?,?,?,?)',(
+                                        self.var_item_id.get(),
+                                        self.var_item_name.get(),
+                                        self.var_item_quantity.get(),
+                                        self.var_item_price.get(),
+                                        self.var_item_date.get()
+                        ))
+                        con.commit()
+                        messagebox.showinfo('Success','Item is added into the databease',parent = self.root)
+                        self.show()
                 else:
-                    cur.execute('Insert into stock (id,name,quantity,price,date) values(?,?,?,?,?)',(
-                                    self.var_item_id.get(),
-                                    self.var_item_name.get(),
-                                    self.var_item_quantity.get(),
-                                    self.var_item_price.get(),
-                                    self.var_item_date.get()
-                    ))
-                    con.commit()
-                    messagebox.showinfo('Success','Item is added into the databease',parent = self.root)
-                    self.show()
+                    messagebox.showerror('Error',"Invalid Quantity",parent = self.root)
         except Exception as ex:
             messagebox.showerror('Error',f"Error due to : {str(ex)}",parent = self.root)
 
@@ -128,23 +135,27 @@ class Stock:
             if self.var_item_id.get() == '' :
                 messagebox.showerror('Error',"Id is required",parent = self.root)
             else:
-                cur.execute('Select * from stock where id=?',(self.var_item_id.get(),))
-                row = cur.fetchone()
-                if row == None:
-                    messagebox.showerror('Error',"Doesn't exist",parent = self.root)
+                q = self.var_item_quantity.get()
+                if int(q)>0:
+                    cur.execute('Select * from stock where id=?',(self.var_item_id.get(),))
+                    row = cur.fetchone()
+                    if row == None:
+                        messagebox.showerror('Error',"Doesn't exist",parent = self.root)
+                    else:
+                        cur.execute('Update stock set name=?,quantity=?,price=?, date = ? where id=?',(
+
+                                        self.var_item_name.get(), 
+                                        self.var_item_quantity.get(),
+                                        self.var_item_price.get(),
+                                        self.var_item_date.get(),
+                                        self.var_item_id.get()
+                        ))
+                        con.commit()
+                        messagebox.showinfo('Success','Stock is updated',parent = self.root)
+                        self.show()
+                        con.close()
                 else:
-                    cur.execute('Update stock set name=?,quantity=?,price=?, date = ? where id=?',(
-                                    
-                                    self.var_item_name.get(), 
-                                    self.var_item_quantity.get(),
-                                    self.var_item_price.get(),
-                                    self.var_item_date.get(),
-                                    self.var_item_id.get()
-                    ))
-                    con.commit()
-                    messagebox.showinfo('Success','Stock is updated',parent = self.root)
-                    self.show()
-                    con.close()
+                    messagebox.showerror('Error',"Invalid Quantity",parent = self.root)
         except Exception as ex:
             messagebox.showerror('Error',f"Error due to : {str(ex)}",parent = self.root)
 
@@ -204,18 +215,26 @@ class Stock:
                 if row == None:
                     messagebox.showerror('Error',"Doesn't exist",parent = self.root)
                 else:
-                    a = self.var_item_quantity.get()
-                    b = self.var_sell_quantity.get()
-                    c = int(a) - int(b)
-                    self.var_item_quantity.set(str(c))
-                    cur.execute('Update stock set quantity=? where id=?',(
-                                    self.var_item_quantity.get(),
-                                    self.var_item_id.get()
-                    ))
-                    con.commit()
-                    messagebox.showinfo('Success','Stock is updated',parent = self.root)
-                    self.show()
-                    con.close()
+                    q = self.var_item_quantity.get()
+                    sq = self.var_sell_quantity.get()
+                    if int(b) > 0:
+                        c = int(q) - int(sq)
+                        cur.execute('Select * from stock where id=?',(self.var_item_id.get(),))
+                        row = cur.fetchone()
+                        if row != None:
+                            messagebox.showerror('Error',"Already Exits",parent = self.root)
+                        else:
+                            self.var_item_quantity.set(str(c))
+                            cur.execute('Update stock set quantity=? where id=?',(
+                                            self.var_item_quantity.get(),
+                                            self.var_item_id.get()
+                            ))
+                            con.commit()
+                            messagebox.showinfo('Success','Stock is updated',parent = self.root)
+                            self.show()
+                            con.close()
+                    else:
+                        messagebox.showerror('Error',"Invalid Sell Quantity",parent = self.root)
         except Exception as ex:
             messagebox.showerror('Error',f"Error due to : {str(ex)}",parent = self.root)
         

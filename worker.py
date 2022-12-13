@@ -27,8 +27,12 @@ class Employee:
         cmb_search.place(x=10,y=10,width=180)
         cmb_search.current(0)
 
+        self.srch_picture = Image.open('img\search.png')
+        self.srch_picture = self.srch_picture.resize((20,20))
+        self.srch_picture = ImageTk.PhotoImage((self.srch_picture))
+
         txt_search = Entry(searchFrame,textvariable=self.var_searchtext,font=('futura',14)).place(x=200,y = 10,width=200)
-        btn_serch = Button(searchFrame,command=self.search,font=('futura',14,'bold'),bg = '#4caf50',fg = 'white',cursor='hand2').place(x = 440,y = 10,width = 150,height=30)
+        btn_serch = Button(searchFrame,image = self.srch_picture,command=self.search,bg = '#4caf50',fg = 'white',cursor='hand2').place(x = 440,y = 10,width = 150,height=30)
 
         title = Label(self.root,text='Worker Details',font = ('Futura',16,'bold'),bg = '#0f4d7d',fg='white',justify=CENTER).place(x =300,y=120,width = 1000)
 
@@ -51,9 +55,9 @@ class Employee:
         txt_wage = Entry(self.root,textvariable=self.var_wrk_wage, font =('Futura',14), bg = 'white').place(x=1200,y=280)
 
         btn_save = Button(self.root,text='Save',command=self.add,font=('futura',14,'bold'),bg = '#4caf50',fg = 'white',cursor='hand2').place(x = 400, y= 400,width = 120,height=30)
-        btn_update = Button(self.root,text='Update',command=self.update,font=('futura',14,'bold'),bg = '#4caf50',fg = 'white',cursor='hand2').place(x = 540, y= 400,width = 120,height=30)
-        btn_delete = Button(self.root,text='Delete',command=self.delete,font=('futura',14,'bold'),bg = '#4caf50',fg = 'white',cursor='hand2').place(x = 680, y= 400,width = 120,height=30)
-        btn_clear = Button(self.root,text='Clear',command= self.clear,font=('futura',14,'bold'),bg = '#4caf50',fg = 'white',cursor='hand2').place(x = 820, y= 400,width = 120,height=30)
+        btn_update = Button(self.root,text='Update',command=self.update,font=('futura',14,'bold'),bg = '#0d6efd',fg = 'white',cursor='hand2').place(x = 540, y= 400,width = 120,height=30)
+        btn_delete = Button(self.root,text='Delete',command=self.delete,font=('futura',14,'bold'),bg = '#dc3545',fg = 'white',cursor='hand2').place(x = 680, y= 400,width = 120,height=30)
+        btn_clear = Button(self.root,text='Clear',command= self.clear,font=('futura',14,'bold'),bg = '#20c997',fg = 'white',cursor='hand2').place(x = 820, y= 400,width = 120,height=30)
         
         emp_frame = Frame(self.root,bd = 3,relief=RIDGE)
         emp_frame.place(x=0,y = 600,relwidth=1,height=360)
@@ -96,17 +100,21 @@ class Employee:
                 if row != None:
                     messagebox.showerror('Error',"Already Exits",parent = self.root)
                 else:
-                    cur.execute('Insert into worker (id,name,gender,contact,nationality,wage) values(?,?,?,?,?,?)',(
-                                    self.var_wrk_id.get(),
-                                    self.var_wrk_name.get(), 
-                                    self.var_wrk_gender.get(),
-                                    self.var_wrk_contact.get(),
-                                    self.var_wrk_nationality.get(),
-                                    self.var_wrk_wage.get()
-                    ))
-                    con.commit()
-                    messagebox.showinfo('Success','Worker is added into the databease',parent = self.root)
-                    self.show()
+                    wge = self.var_wrk_wage.get()
+                    if int(wge) >0:
+                        cur.execute('Insert into worker (id,name,gender,contact,nationality,wage) values(?,?,?,?,?,?)',(
+                                        self.var_wrk_id.get(),
+                                        self.var_wrk_name.get(), 
+                                        self.var_wrk_gender.get(),
+                                        self.var_wrk_contact.get(),
+                                        self.var_wrk_nationality.get(),
+                                        self.var_wrk_wage.get()
+                        ))
+                        con.commit()
+                        messagebox.showinfo('Success','Worker is added into the databease',parent = self.root)
+                        self.show()
+                    else:
+                        messagebox.showerror('Error',"Invalid Wage",parent = self.root)
         except Exception as ex:
             messagebox.showerror('Error',f"Error due to : {str(ex)}",parent = self.root)
 
