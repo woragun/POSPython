@@ -11,7 +11,7 @@ class FMS:
         self.root.configure(bg='#ffdeab')
 
         title = Label(self.root,text='Farm Management System',font=('futura','40','bold'),bg = '#517d30',fg='#fffde0').place(x = 0,y = 0,relwidth=1,height = 80)
-        self.lbl_clock = Label(self.root,text='Welcome to Sriwan Farm\t\t Date: DD-MM-YYYY\t\t Time:HH:MM',font=('futura','20','bold'),bg = '#517d30',fg='#fffde0')
+        self.lbl_clock = Label(self.root,text='Welcome to Sriwan Farm',font=('futura','20','bold'),bg = '#517d30',fg='#fffde0')
         self.lbl_clock.place(y=80,relwidth=1,height = 40)
 
         Menu = Frame(self.root,relief = RIDGE,bg = '#517d30')
@@ -42,11 +42,6 @@ class FMS:
         btn_storage = Button(Menu,image=self.storage_img,command=self.stock,bg = '#517d30',highlightthickness=0,bd=0).pack(side=TOP,pady=20)
         btn_account = Button(Menu,image =self.account_img,bg = '#517d30',highlightthickness = 0, bd = 0).pack(side=TOP,pady=20)
         btn_history = Button(Menu,image=self.history_img,bg = '#517d30',highlightthickness=0,bd=0).pack(side=TOP)
-
-        self.lbl_dailysell = Label(self.root,text =  'Today sell\n [0]',font=('futura','40','bold'),bg='#33bbf9',fg='white')
-        self.lbl_dailysell.place(x = 404,y = 140,height = 320, width= 400)
-        self.lbl_dailysell = Label(self.root,text =  'This month sell\n [0]',font=('futura','35','bold'),bg='#33bbf9',fg='white')
-        self.lbl_dailysell.place(x = 404,y = 480,height = 320, width= 400)
 
     def worker(self):
         self.new_win = Toplevel(self.root)
