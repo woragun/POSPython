@@ -171,6 +171,7 @@ class Stock:
         self.var_item.price.set(""),
         self.var_item_date.set(''),
         self.var_searchtext.set('')
+        self.var_sell_quantity.set('0')
         self.show()
     
     def search(self):
